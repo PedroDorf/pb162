@@ -9,9 +9,6 @@ import cz.muni.fi.pb162.project.geometry.Vertex2D;
 /**
  * Demo creates 3 points and a triangle with these points
  * as its tops.
- * @param ver0
- * @param ver1
- * @param ver2 Those 3 points.
  * @author pedro
  */
 public class Demo {

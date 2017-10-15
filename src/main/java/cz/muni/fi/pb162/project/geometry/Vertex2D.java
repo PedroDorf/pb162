@@ -7,53 +7,63 @@ package cz.muni.fi.pb162.project.geometry;
 
 /**
  * Vertex2D is a point...
- * @param x X coordinates of the point
- * @param y Y coordinates of the point
  * @author xmasari3
  */
 public class Vertex2D {
-    private double x;
-    private double y;
-
-    double sumCoordinates(){
+    private final double x;
+    private final double y;
+    /**
+     * Creates default point [0,0]
+     */
+    public Vertex2D(){
+        this(0,0);
+    }
+    /**
+     * Creates point [x,y]
+     * @param x 
+     * @param y 
+     */
+    public Vertex2D(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+    /**
+     * Sums coordinates
+     * @return coordinates sum
+     */
+    public double sumCoordinates(){
         return x + y;
     }
     /**
-     * move moves point in direction given by param vertex
-     * @param vertex 
+     * move moves point in direction given by parameter vertex
+     * @param vertex how much to move the main point
+     * @return new Object moved by those 2 points
      */
-    public void move(Vertex2D vertex){
-        x += vertex.x;
-        y += vertex.y;
+    public Vertex2D move(Vertex2D vertex){
+        return new Vertex2D(x + vertex.getX(), y + vertex.getY());
+    }
+    /**
+     * Distance between 2 points
+     * @param vertex between which point
+     * @return how big distance there is
+     */
+    public double distance(Vertex2D vertex) {
+        if (vertex != null) {
+            return Math.sqrt(Math.pow(vertex.getX() - x, 2) + Math.pow(vertex.getY() - y, 2));
+        }
+        return -1.0;
     }
     
     public double getX() {
         return x;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
     public double getY() {
         return y;
     }
 
-    public void setY(double y) {
-        this.y = y;
-    }
-
     @Override
     public String toString() {
-        return "[" + x + ", " + y + ']';
+        return '[' + x + ", " + y + ']';
     }
-    
-    public Vertex2D(){};
-    
-    public Vertex2D (double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-    
-    
 }
