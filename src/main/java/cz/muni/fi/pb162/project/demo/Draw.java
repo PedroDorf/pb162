@@ -1,5 +1,6 @@
 package cz.muni.fi.pb162.project.demo;
 
+import cz.muni.fi.pb162.project.geometry.Circle;
 import cz.muni.fi.pb162.project.geometry.Triangle;
 import cz.muni.fi.pb162.project.geometry.Vertex2D;
 
@@ -18,42 +19,28 @@ import java.awt.Polygon;
 public final class Draw extends JFrame {
 
     private static final Color TRIANGLE_COLOR = Color.BLUE;
+    private static final Color CIRCLE_COLOR = Color.RED;
 
     private static final int PANEL_WIDTH = 800;
-    private static final int PANEL_HEIGHT = 600;
+    private static final int PANEL_HEIGHT = 660;
     private static final int HALF_WIDTH = PANEL_WIDTH / 2;
     private static final int HALF_HEIGHT = PANEL_HEIGHT / 2;
 
     private Graphics graphics;
 
+    private static final int TRIANGLE_DEPTH = 4;
     private static final Triangle DIVIDED_TRIANGLE = createDividedTriangle();
+    private static final Circle CIRCLE = new Circle(new Vertex2D(0,0), 290);
 
     private static Triangle createDividedTriangle() {
 
-        Vertex2D v1 = new Vertex2D();
-        Vertex2D v2 = new Vertex2D();
-        Vertex2D v3 = new Vertex2D();
-        v1.setX(-100);
-        v1.setY(0);
-        v2.setX(0);
-        v2.setY(100);
-        v3.setX(100);
-        v3.setY(-100);
+        Vertex2D v1 = new Vertex2D(-200, -200);
+        Vertex2D v2 = new Vertex2D(0, 200);
+        Vertex2D v3 = new Vertex2D(200, -200);
 
-        Triangle triangle = new Triangle();
-        triangle.setVertex(0, v1);
-        triangle.setVertex(1, v2);
-        triangle.setVertex(2, v3);
+        Triangle triangle = new Triangle(v1, v2, v3);
 
-        triangle.divide();
-
-        System.out.println(triangle);
-
-        System.out.println("Sub triangles:");
-
-        System.out.println(triangle.getSubTriangle(0));
-        System.out.println(triangle.getSubTriangle(1));
-        System.out.println(triangle.getSubTriangle(2));
+        triangle.divide(TRIANGLE_DEPTH);
 
         return triangle;
     }
@@ -88,8 +75,9 @@ public final class Draw extends JFrame {
         graphics = g;
 
         paintCross();
+        paintCircle(CIRCLE);
         paintTriangle(DIVIDED_TRIANGLE);
-        paintSubTriangles();
+        paintSubTrianglesRecursively(DIVIDED_TRIANGLE);
     }
 
     private void paintCross() {
@@ -98,9 +86,11 @@ public final class Draw extends JFrame {
         graphics.drawLine(HALF_WIDTH, 0, HALF_WIDTH, PANEL_HEIGHT);
     }
 
-    private void paintSubTriangles() {
+    private void paintSubTrianglesRecursively(Triangle triangle) {
         for (int i = 0; i < 3; i++) {
-            paintTriangle(DIVIDED_TRIANGLE.getSubTriangle(i));
+            Triangle subTriangle = triangle.getSubTriangle(i);
+            paintTriangle(subTriangle);
+            if (subTriangle.isDivided()) paintSubTrianglesRecursively(subTriangle);
         }
     }
 
@@ -123,6 +113,17 @@ public final class Draw extends JFrame {
         int a1 = PANEL_WIDTH - ((int) Math.rint(HALF_WIDTH - triangle.getVertex(index).getX()));
         int a2 = (int) Math.rint(HALF_HEIGHT - triangle.getVertex(index).getY());
         return new Pair<>(a1, a2);
+    }
+
+    protected void paintCircle(Circle c) {
+
+        int radius = (int) Math.rint(c.getRadius());
+        int x = PANEL_WIDTH - ((int) Math.rint(HALF_WIDTH - c.getCenter().getX()) + radius);
+        int y = (int) Math.rint(HALF_HEIGHT - c.getCenter().getY()) - radius;
+        int diameter = (int) Math.rint(c.getRadius() * 2.0);
+
+        graphics.setColor(CIRCLE_COLOR);
+        graphics.drawOval(x, y, diameter, diameter);
     }
 
     private class Pair<L, R> {

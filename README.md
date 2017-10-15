@@ -1,58 +1,53 @@
-## První iterace
+## Druhá iterace
 
-Cvičení zaměřené na základní práci s atributy, metodami a na instanciaci tříd (bez vlastních konstruktorů).
+Cvičení zaměřené na definici vlastních konstruktorů a jejich přetěžování.
 
-1.  Upravte třídu `Vertex2D` následujícím způsobem:
-    *   Přidejte do třídy tzv. "gettery" a "settery", konkrétně metody:
-        *   `double getX()` a `double getY()` pro získání hodnot atributů,
-        *   `void setX(double newX)` a `void setY(double newY)` pro nastavení hodnot atributů.
-    *   Upravte viditelnost atributů, aby splňovaly podmínky zapouzdření.
-    *   Metodu `printInfo()` přejmenujte na `toString()`.
-2.  Vytvořte třídu `Triangle` v balíku `cz.muni.fi.pb162.project.geometry`.
-    *   Trojúhelník se skládá ze tří vrcholů typu `Vertex2D` a bude mít jeden atribut typu **pole vrcholů**.
-    *   Třída bude mít defaultní (implicitní) konstruktor.
-    *   Metoda `Vertex2D getVertex(int index)` vrátí _index_-tý vrchol.
-        Jestli je _index_ menší než 0 nebo větší než 2, vrátí metoda hodnotu `null`.
-        Když je _index_ 0, vrátí první vrchol, jestli 1 tak druhý, jestli 2 pak třetí.
-    *   Obdobně `void setVertex(int index, Vertex2D vertex)`.
-    *   Metoda `String toString()` vrátí řetězec:
+1.  Ve třídě `Vertex2D`:
+    *   Třída bude mít definovaný konstruktor o dvou parametrech `x` a `y`.
+    *   Udělejte třídu `Vertex2D` neměnnou (*immutable*) tím, že odstraníte settery a změníte metodu `move`.
+        Metoda `move` bude mít návratový typ `Vertex2D` a bude vracet nový vrchol.
+    *   Přidejte metodu `double distance(Vertex2D vertex)`, která vezme jiný 2D bod jako vstupní parametr a vrátí
+        jeho eukleidovskou vzdálenost. Vzdálenost bodů se vypočítá jako:
+    ![vzorec](images/02a.png)
+    *   Pokud je vstupní argument `null`, pak metoda vrátí hodnotu `-1.0` jako indikátor chyby
+    (vzdálenost je vždy >= 0).
 
-        ~~~~
-        "Triangle: vertices=[ax, ay] [bx, by] [cx, cy]"
-        ~~~~
-        Využijte metodu `toString()` z třídy `Vertex2D`.
-    * Trojúhelník budeme moci rozdělit na tři menší trojúhelníky:
+    > V Javě se odmocnina vypočítá pomocí statické metody `Math.sqrt()`.
 
-        ![rozdělený trojúhelník](images/01b.png)
-        *Původní trojúhelník (vlevo) a rozdělený na podtrojúhelníky (vpravo).*
-    *   Implementujte proto tyto metody:
-           *   Třída `Triangle` bude obsahovat atribut typu `Triangle[]`.
-               V něm budou uloženy tři menší (na obrázku - černé) trojúhelníky. Na začátku je tento atribut nenainstanciovaný (nastavený na null),
-               protože rozdělení zatím nebylo provedeno.
-           *   Metoda `boolean isDivided()` zjistí, jestli již došlo k rozdělení trojúhelníka (menší trojúhelníky byly vytvořeny).
-           *   Metoda `getSubTriangle(int index)` vrátí `index`-tý podtrojúhelník, kde `index` je číslo mezi 0 a 2.
-               Pokud je `index` mimo tento rozsah, nebo pokud trojúhelník není dosud rozdělen, vrátí metoda `null`.
-           *   Metoda `boolean divide()` rozdělí trojúhelník, tj. vytvoří tři menší trojúhelníky, uloží je do atributů a vrátí `true`.
-               Pokud již trojúhelník byl rozdělen (`isDivided()` vrátí `true`), metoda neprovede nic a jen vrátí `false`.
-               Vrcholy menších trojúhelníků jsou vždy v polovině délky stran původního trojúhelníka.
-               Střed hrany (úsečky) má souřadnice _[(x<sub>1</sub>+x<sub>2</sub>)/2, (y<sub>1</sub>+y<sub>2</sub>)/2]_,
-               kde _[x<sub>1</sub>, y<sub>1</sub>]_ a _[x<sub>2</sub>, y<sub>2</sub>]_ jsou vrcholy trojúhelníka.
-           *   Je doporučeno si na souřadnice středu hrany mezi dvěma vrcholy vytvořit privátní metodu.
+2.  Vytvořte třídu `Circle`.
+    *   Třída bude mít konstruktor se dvěma parametry (v tomto pořadí): _střed_ typu `Vertex2D` a _poloměr_ typu `double`.
+        Atributy budou neměnné.
+    *   Třída bude mít dále *bezparametrický konstruktor*, který vytvoří jednotkovou kružnici se středem
+        v počátku souřadného systému (střed `[0, 0]`, poloměr `1`).
+    *   **Bezparametrický konstruktor bude volat předchozí konstruktor** s parametry a předá mu potřebné hodnoty.
+    *   Pro poloměr a střed vygenerujte gettery `getRadius()` a `getCenter()`.
+    *   Metoda `toString` bude vracet řetězec ve formátu:
 
+            "Circle: center=[<x>, <y>], radius=<radius>"
 
-3.  Upravte třídu `Demo` následujícím způsobem:
-    *   Třídu přesuňte do balíku `cz.muni.fi.pb162.project.demo`.
-    *   Zrušte vytváření proměnných i výpis textu.
-    *   Třída vytvoří trojúhelník se souřadnicemi _[-100, 0] [0, 100] [100, -100]_.
-    *   Na std. výstup vypíše informace o trojúhelníku. Po spuštění by výstup měl vypadat takto:
+        kde `<x>` a `<y>` jsou hodnoty příslušných souřadnic středu a `<radius>` je hodnota poloměru.
 
-        ~~~~
-        Triangle: vertices=[-100.0, 0.0] [0.0, 100.0] [100.0, -100.0]
-        ~~~~
-5.  Správnost implementace si ověřte jednotkovými testy.
-    Pak spustíte třídu `Draw` v balíčku `demo`, zobrazí se vám trojúhelník se třemi podtrojúhelníky.
+3.  Upravte třídu `Triangle` následujícím způsobem:
+    *   Konstruktor bude mít *3 parametry* typu `Vertex2D`.
+    *   Udělejte třídu neměnnou tím, že odstraníte metodu set.
+    *   Přidejte metodu `boolean isEquilateral()`, která vrátí `true`, jestliže je trojúhelník rovnostranný.
+        Protože pracujeme s reálnými čísly, nelze jednoduše porovnávat délky stran pomocí `d1 == d2`.
+        Je nutné použít test, který bude považovat dvě reálná čísla za shodná, pokud se liší jen málo:
 
-6.  Zdokumentujte třídy pomocí [_JavaDoc_](https://en.wikipedia.org/wiki/Javadoc).
-    Pak zkontrolujte, jestli vám přešel checkstyle zavoláním příkazu:
+            Math.abs(d1-d2) < 0.001
 
-        mvn clean install -Dcheckstyle.fail=true
+        kde `0.001` je tolerovaná absolutní odchylka.
+    *   Vytvořte přetíženou metodu `boolean divide(int depth)`, která rozdělí trojúhelník na podtrojúhelníky.
+        Výsledkem bude [_Sierpińského trojúhelník_](http://en.wikipedia.org/wiki/Sierpinski_triangle):
+             ![Sierpińského trojúhelník](images/02b.png)
+             *Sierpińského trojúhelníky hloubky 0 až 4.*
+        *   Parametr `depth` udává hloubku dělení. Nula značí žádné dělení (jsme na konci rekurze), 1 znamená,
+            že dojde k jednomu rozdělení původního trojúhelníka, atd.
+        *   Jestli je `depth` nula, rekurze se ukončí vrácením `false` (trojúhelník na úrovni nula je již rozdělen).
+        *   Záporná hodnota je považována za chybu, kterou metoda indikuje tím, že vrátí `false`.
+        *   Metoda použije existující metodu `divide()`, a pak zavolá `divide(int depth)` na svých podtrojúhelnících
+            s parametrem `depth` o jedna nižší a pak vrátí `true`.
+
+4.  Upravte třídu `Demo` tak, aby šla zkompilovat.
+
+5.  Po spuštění třídy `Draw` se na obrazovce vykreslí *Sierpińského trojúhelníky* hloubky 4 a kolem něho červená kružnice.

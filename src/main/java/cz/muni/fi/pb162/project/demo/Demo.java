@@ -7,25 +7,21 @@ package cz.muni.fi.pb162.project.demo;
 import cz.muni.fi.pb162.project.geometry.Triangle;
 import cz.muni.fi.pb162.project.geometry.Vertex2D;
 /**
- *
+ * Demo creates 3 points and a triangle with these points
+ * as its tops.
+ * @param ver0
+ * @param ver1
+ * @param ver2 Those 3 points.
  * @author pedro
  */
 public class Demo {
     public static void main(String[]args) {
-        Triangle triangle = new Triangle();
-        Vertex2D ver0 = new Vertex2D();
-        Vertex2D ver1 = new Vertex2D();
-        Vertex2D ver2 = new Vertex2D();
-        ver0.setX(-100);
-        ver0.setY(0);
-        ver1.setX(0);
-        ver1.setY(100.0);
-        ver2.setX(100.0);
-        ver2.setY(-100.0);
-        triangle.setVertex(0, ver0);
-        triangle.setVertex(1, ver1);
-        triangle.setVertex(2, ver2);
-        triangle.toString();
-    }
-    
+        
+        Vertex2D ver0 = new Vertex2D(-100,0);
+        Vertex2D ver1 = new Vertex2D(0,100);
+        Vertex2D ver2 = new Vertex2D(100,-100);
+        
+        Triangle triangle = new Triangle(ver0, ver1, ver2);
+        System.out.println(triangle);
+     }
 }
