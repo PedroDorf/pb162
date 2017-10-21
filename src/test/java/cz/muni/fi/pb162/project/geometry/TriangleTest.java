@@ -1,6 +1,7 @@
 package cz.muni.fi.pb162.project.geometry;
 
 import cz.muni.fi.pb162.project.helper.BasicRulesTester;
+import cz.muni.fi.pb162.project.utils.SimpleMath;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +23,7 @@ public class TriangleTest {
     private final Vertex2D vertex1 = new Vertex2D(-100, -100);
     private final Vertex2D vertex2 = new Vertex2D(100, 100);
     private final Vertex2D vertex3 = new Vertex2D(0, 0);
+    private double EPSILON = 0.001;
 
     @Before
     public void setUp() {
@@ -29,8 +31,31 @@ public class TriangleTest {
     }
 
     @Test
-    public void attributes2AndFinal() {
-        BasicRulesTester.attributes2AndFinal(Triangle.class);
+    public void attributesFinal() {
+        BasicRulesTester.attributesFinal(Triangle.class);
+    }
+
+    @Test
+    public void testAllWidths() {
+        testWidth(new Vertex2D[] {vertex1, vertex2, vertex3});
+        testWidth(new Vertex2D[] {new Vertex2D(-3,-1), new Vertex2D(-2,-2), new Vertex2D(-1,-1)});
+    }
+
+
+    public void testWidth(Vertex2D[] vertices) {
+        Triangle triangle = new Triangle(vertices[0], vertices[1], vertices[2]);
+        assertEquals(SimpleMath.maxX(vertices).getX() - SimpleMath.minX(vertices).getX(), triangle.getWidth(), EPSILON);
+    }
+
+    @Test
+    public void testAllHeights() {
+        testHeight(new Vertex2D[] {vertex1, vertex2, vertex3});
+        testHeight(new Vertex2D[] {new Vertex2D(-3,-1), new Vertex2D(-2,-2), new Vertex2D(-1,-1)});
+    }
+
+    public void testHeight(Vertex2D[] vertices) {
+        Triangle triangle = new Triangle(vertices[0], vertices[1], vertices[2]);
+        assertEquals(SimpleMath.maxY(vertices).getY() - SimpleMath.minY(vertices).getY(), triangle.getHeight(), EPSILON);
     }
 
     @Test

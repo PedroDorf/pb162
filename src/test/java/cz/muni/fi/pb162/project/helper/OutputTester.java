@@ -37,12 +37,12 @@ public class OutputTester {
     }
 
     /**
-     * Returns trimmed output.
+     * Returns output.
      *
      * @return output string
      */
-    public String getTrimmedOutput() {
-        return os.toString().trim();
+    public String getOutput() {
+        return os.toString();
     }
 
 }

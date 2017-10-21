@@ -27,8 +27,8 @@ public class Vertex2DTest {
     }
 
     @Test
-    public void attributes2AndFinal() {
-        BasicRulesTester.attributes2AndFinal(Vertex2D.class);
+    public void attributesFinal() {
+        BasicRulesTester.attributesFinal(Vertex2D.class);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class Vertex2DTest {
         }
     }
 
-        @Test
+    @Test
     public void testSumCoordinates() {
         assertEquals(X + Y, vertex2D.sumCoordinates(), DELTA);
     }

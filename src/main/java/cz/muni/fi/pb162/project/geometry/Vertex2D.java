@@ -64,6 +64,6 @@ public class Vertex2D {
 
     @Override
     public String toString() {
-        return '[' + x + ", " + y + ']';
+        return "[" + x + ", " + y + "]";
     }
 }

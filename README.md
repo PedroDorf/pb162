@@ -1,53 +1,68 @@
-## Druhá iterace
+## Třetí iterace
 
-Cvičení zaměřené na definici vlastních konstruktorů a jejich přetěžování.
+Cvičení zaměřené na statické metody, implementaci a použití rozhraní.
 
-1.  Ve třídě `Vertex2D`:
-    *   Třída bude mít definovaný konstruktor o dvou parametrech `x` a `y`.
-    *   Udělejte třídu `Vertex2D` neměnnou (*immutable*) tím, že odstraníte settery a změníte metodu `move`.
-        Metoda `move` bude mít návratový typ `Vertex2D` a bude vracet nový vrchol.
-    *   Přidejte metodu `double distance(Vertex2D vertex)`, která vezme jiný 2D bod jako vstupní parametr a vrátí
-        jeho eukleidovskou vzdálenost. Vzdálenost bodů se vypočítá jako:
-    ![vzorec](images/02a.png)
-    *   Pokud je vstupní argument `null`, pak metoda vrátí hodnotu `-1.0` jako indikátor chyby
-    (vzdálenost je vždy >= 0).
+1.  Vytvořte třídu `SimpleMath` v balíku `cz.muni.fi.pb162.project.utils`.
+    *   Třída bude implementovat pouze _statické_ metody.
+    *   Statická metoda `Vertex2D minX(Vertex2D[] vertices)` vrátí vrchol s nejmenší X-ovou souřadnicí.
+    *   Statická metoda `Vertex2D minY(Vertex2D[] vertices)` vrátí vrchol s nejmenší Y-ovou souřadnicí.
+    *   Obdobně pro metody `maxX` a `maxY`.
 
-    > V Javě se odmocnina vypočítá pomocí statické metody `Math.sqrt()`.
+    > Existují statické metody `Math.min` a `Math.max`.
 
-2.  Vytvořte třídu `Circle`.
-    *   Třída bude mít konstruktor se dvěma parametry (v tomto pořadí): _střed_ typu `Vertex2D` a _poloměr_ typu `double`.
-        Atributy budou neměnné.
-    *   Třída bude mít dále *bezparametrický konstruktor*, který vytvoří jednotkovou kružnici se středem
-        v počátku souřadného systému (střed `[0, 0]`, poloměr `1`).
-    *   **Bezparametrický konstruktor bude volat předchozí konstruktor** s parametry a předá mu potřebné hodnoty.
-    *   Pro poloměr a střed vygenerujte gettery `getRadius()` a `getCenter()`.
-    *   Metoda `toString` bude vracet řetězec ve formátu:
+2.  Upravte třídy `Triangle` a `Circle` tak, aby implementovaly i rozhraní `Measurable`.
+    *   Výška/šířka trojúhelníku se vypočítá jako rozdíl maximální a minimální x-ové (u šířky) respektive y-ové (u výšky) souřadnice vrcholů:
 
-            "Circle: center=[<x>, <y>], radius=<radius>"
+        ![šířka objektů](images/03a.png)
+    *   Využijte statické metody ze třídy `SimpleMath`.
+    *   V metodě `isEquilateral` třídy `Triangle` používáme číslo `0.001` jako povolenou odchylku dvou reálných čísel
+            (tzv. epsilon). Definujte tuto hodnotu jako **veřejnou konstantu**.
 
-        kde `<x>` a `<y>` jsou hodnoty příslušných souřadnic středu a `<radius>` je hodnota poloměru.
+2.  V balíku `utils` vytvořte třídu `Gauger` ("měřidlo") se dvěma statickými přetíženými metodami `printMeasurement`:
+    *   První metoda vezme libovolný měřitelný objekt (tj. libovolný objekt implementující rozhraní `Measurable`) a
+        *   na standardní výstup vypíše _"Width: \<w\>"_, kde \<w\> je hodnota šířky,
+        *   na další řádek vypíše _"Height: \<h\>"_, kde \<h\> je hodnota výšky.
+    *   Druhá metoda vezme trojúhelník (objekt typu `Triangle`) a
+        *   na standardní výstup vypíše informace o objektu, viz metoda `toString()`,
+        *   na další řádek vypíše _"Width: \<w\>"_, kde \<w\> je opět hodnota šířky,
+        *   na další řádek vypíše _"Height: \<h\>"_, kde \<h\> je opět hodnota výšky.
+    *   Vyhněte se opakování kódu tím, že druhá varianta metody bude volat tu první. Pozor ale, ať nevolá sebe sama.
+        Došlo by k zacyklení (`StackOverflowException`).
 
-3.  Upravte třídu `Triangle` následujícím způsobem:
-    *   Konstruktor bude mít *3 parametry* typu `Vertex2D`.
-    *   Udělejte třídu neměnnou tím, že odstraníte metodu set.
-    *   Přidejte metodu `boolean isEquilateral()`, která vrátí `true`, jestliže je trojúhelník rovnostranný.
-        Protože pracujeme s reálnými čísly, nelze jednoduše porovnávat délky stran pomocí `d1 == d2`.
-        Je nutné použít test, který bude považovat dvě reálná čísla za shodná, pokud se liší jen málo:
+3.  V balíku `geometry` vytvořte třídu `Square`:
+    *   První konstruktor bude obsahovat délku hrany a souřadnici levého dolního vrcholu.
+    *   Druhý konstruktor bude obsahovat souřadnice středu a délku hrany.
+    *   Aby šlo konstruktory ve třídě Square přetížit, musí mít druhý konstruktor parametry v opačném pořadí,
+        tj. jako první je poloměr a jako druhý střed. Jinak by totiž byla signatura obou konstruktorů stejná.
+    *   Třída bude implementovat rozhraní `Circumcircle` (opsaná kružnice):
+    *   Poloměr opsané kružnice čtverce je
+        ![poloměr kružnice](images/03b.png)
+        kde `a` je délka hrany.
+    *   Metoda `Vertex2D getVertex(int index)` vrátí vrchol na daném indexu v pořadí: 
+        levý dolní, pravý dolní, pravý horní, levý horní.
+        Souřadnice vrcholů čtverce vypočítáme posunutím (metoda `move`) již existujícího vrcholu.
+    *   Přidejte taky getter `double getEdgeLength()`.
+    *   Nezapomeňte na metodu `toString()`:
 
-            Math.abs(d1-d2) < 0.001
+            "Square: vertices=[ax, ay] [bx, by] [cx, cy] [dx, dy]"
 
-        kde `0.001` je tolerovaná absolutní odchylka.
-    *   Vytvořte přetíženou metodu `boolean divide(int depth)`, která rozdělí trojúhelník na podtrojúhelníky.
-        Výsledkem bude [_Sierpińského trojúhelník_](http://en.wikipedia.org/wiki/Sierpinski_triangle):
-             ![Sierpińského trojúhelník](images/02b.png)
-             *Sierpińského trojúhelníky hloubky 0 až 4.*
-        *   Parametr `depth` udává hloubku dělení. Nula značí žádné dělení (jsme na konci rekurze), 1 znamená,
-            že dojde k jednomu rozdělení původního trojúhelníka, atd.
-        *   Jestli je `depth` nula, rekurze se ukončí vrácením `false` (trojúhelník na úrovni nula je již rozdělen).
-        *   Záporná hodnota je považována za chybu, kterou metoda indikuje tím, že vrátí `false`.
-        *   Metoda použije existující metodu `divide()`, a pak zavolá `divide(int depth)` na svých podtrojúhelnících
-            s parametrem `depth` o jedna nižší a pak vrátí `true`.
+        přičemž zpráva obsahuje jen 3 mezery mezi vrcholy.
 
-4.  Upravte třídu `Demo` tak, aby šla zkompilovat.
+4.  Třída `Circle` bude taky implementovat rozhraní `Circumcircle`.
+    Opsanou kružnicí je kružnice sama, proto netřeba implementovat žádné nové metody.
+    Přidejte jenom anotaci `@Override`.
 
-5.  Po spuštění třídy `Draw` se na obrazovce vykreslí *Sierpińského trojúhelníky* hloubky 4 a kolem něho červená kružnice.
+5.  V balíku `geometry` vytvořte třídu `Snowman`:
+    *   Sněhulák se skládá ze čtyř opsaných kružnic.
+    *   Konstruktor bude jako svůj první parametr brát parametr typu `Circumcircle` (spodní kružnice),
+        a jako druhý parametr zmenšovací faktor (poloměru kružnice) pro kružnice nad ní (reálné číslo o rozsahu `(0..1>`).
+        V případě, že vstupní parametr nebude z požadovaného rozsahu, použije se neveřejná pojmenovaná konstanta `0.8`.
+    *   První kružnice je první argument konstruktoru, druhá bude položená na první s poloměrem zmenšeným o zmenšovací faktor,
+        třetí kružnice bude vytvořena stejným způsobem.
+    *   Celý sněhulák vznikne v konstruktoru, nebojte se ale kód rozdělit do menších privátních metod.
+    *   Třídu implementujte tak, aby se dal počet koulí lehce měnit.
+    *   Metoda `Circumcircle[] getBalls()` vrátí pole kružnic, od nejspodnější po nejvyšší (nejmenší).
+
+6. Demo vytvoří čtverec se středem `[0, 0]`, délkou `100` a vypíše o něm informace na standardní výstup.
+
+7. Draw vykreslí zelený čtverec a nad ním sněhuláka.

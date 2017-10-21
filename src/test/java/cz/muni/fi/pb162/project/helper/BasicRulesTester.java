@@ -51,24 +51,11 @@ public class BasicRulesTester extends org.junit.Assert {
     }
 
 
-    public static void attributes2AndFinal(Class clazz) {
+    public static void attributesFinal(Class clazz) {
         Field[] attributes = BasicRulesTester.getFields(clazz);
-        assertEquals("Different number of attributes than 2", 2, attributes.length);
         for (Field field : attributes) {
             assertTrue("Attributes should be final", Modifier.isFinal(field.getModifiers()));
         }
     }
-
-    public static void attributesAmount(Class clazz, int expected) {
-        // + 1 due to coverage
-        assertTrue("Useless attributes", clazz.getDeclaredFields().length <= (expected + 1));
-    }
-
-
-    public static void methodsAmount(Class clazz, int expected) {
-        // + 1 due to coverage
-        assertTrue("Useless attributes", clazz.getDeclaredMethods().length <= (expected + 1));
-    }
-
 
 }

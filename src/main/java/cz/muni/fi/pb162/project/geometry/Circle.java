@@ -9,7 +9,7 @@ package cz.muni.fi.pb162.project.geometry;
  * Circle It is a circle object
  * @author pedro
  */
-public class Circle {
+public class Circle implements Circumcircle, Measurable {
     private final Vertex2D center;
     private final double radius;
     /**
@@ -27,11 +27,23 @@ public class Circle {
         this.center = center;
         this.radius = radius;
     }
-
+    
+    @Override
     public Vertex2D getCenter() {
         return center;
     }
 
+    @Override
+    public double getHeight() {
+        return radius * 2;
+    }
+    
+    @Override
+    public double getWidth() {
+        return radius * 2;
+    }
+    
+    @Override
     public double getRadius() {
         return radius;
     }

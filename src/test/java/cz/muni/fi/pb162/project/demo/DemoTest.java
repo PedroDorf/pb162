@@ -12,7 +12,9 @@ import static org.junit.Assert.assertEquals;
  */
 public class DemoTest {
 
-    private static final String EXPECTED_OUTPUT = "Triangle: vertices=[-100.0, 0.0] [0.0, 100.0] [100.0, -100.0]";
+    private static final String EXPECTED_OUTPUT =
+            "Square: vertices=[-50.0, -50.0] [50.0, -50.0] [50.0, 50.0] [-50.0, 50.0]"
+            + System.lineSeparator();
 
     @Test
     public void testMainOutput() {
@@ -26,7 +28,7 @@ public class DemoTest {
         ot.captureOutput();
         new Demo().main(null);
         ot.releaseOutput();
-        return ot.getTrimmedOutput();
+        return ot.getOutput();
     }
 
 }

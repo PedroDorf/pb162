@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Tests Circle class.
+ *
  * @author Marek Sabo
  */
 public class CircleTest {
@@ -24,7 +25,7 @@ public class CircleTest {
 
     @Test
     public void attributes2AndFinal() {
-        BasicRulesTester.attributes2AndFinal(Circle.class);
+        BasicRulesTester.attributesFinal(Circle.class);
     }
 
     @Test
@@ -39,14 +40,21 @@ public class CircleTest {
         assertCircle(new Circle(), new Circle(new Vertex2D(0, 0), 1));
     }
 
-    private void assertCircle(Circle expected, Circle actual) {
-        assertTrue(expected.getRadius()        == actual.getRadius());
-        assertTrue(expected.getCenter().getX() == actual.getCenter().getX());
-        assertTrue(expected.getCenter().getY() == actual.getCenter().getY());
+    public static void assertCircle(Circumcircle expected, Circumcircle actual) {
+        double DELTA = 0.001;
+        assertEquals(expected.getRadius(), actual.getRadius(), DELTA);
+        assertEquals(expected.getCenter().getX(), actual.getCenter().getX(), DELTA);
+        assertEquals(expected.getCenter().getY(), actual.getCenter().getY(), DELTA);
     }
 
     @Test
     public void toStringMessage() {
-        assertEquals( "Circle: center=" + circle.getCenter() + ", radius=" + circle.getRadius(), circle.toString());
+        assertEquals("Circle: center=" + circle.getCenter() + ", radius=" + circle.getRadius(), circle.toString());
+    }
+
+    @Test
+    public void testWidthAndHeight() {
+        assertEquals(circle.getWidth(), 2 * RADIUS, 0);
+        assertEquals(circle.getHeight(), 2 * RADIUS, 0);
     }
 }
